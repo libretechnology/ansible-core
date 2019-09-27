@@ -1,0 +1,43 @@
+---
+# Playbook:     bootstrap.yml
+# Description:  Install python and pre-requisites
+# Author:       Mauro Rosero P,
+# Email:        mrosero@libretechnology.com (mauro.rosero@gmail.com)
+# Organization: LIBRETECH, S. A.
+
+# Note: Run from some computers with ansible installed
+#       Only run in Debian distribution
+---
+
+- name: bootstrap.yml
+  hosts: all
+  remote_user: root
+  gather_facts: no
+
+  tasks:
+
+  - name: Fail if not Debian Distribution
+  	fail:
+  	  msg: 'Not a valid Debian/Ubuntu Distribution: {{ ansible_distribution }}'
+  	when: ansible_distribution != 'Debian' and ansible_distribution != 'Ubuntu'
+
+  - name: Check for Python
+    raw: test -e /usr/bin/python
+    changed_when: false
+    failed_when: false
+    register: check_python
+
+	- name: Install python3
+  	raw: apt -y update && apt -y upgrade && apt install -y python python-pip
+    when: check_python.rc != 0
+
+  - name: Check for Python v3
+    raw: test -e /usr/bin/python3
+    changed_when: false
+    failed_when: false
+    register: check_python
+
+	- name: Install python
+  	raw: apt -y update && apt -y upgrade && apt install -y python3 python3-pip
+    when: check_python.rc != 0
+
