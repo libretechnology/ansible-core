@@ -13,6 +13,10 @@
   become: yes
   gather_facts: yes
 
+  vars:
+    
+    re_mode: 'both'        # Valid modes: both, remote and local
+
   tasks:
 
   - name: Install ansible package
@@ -31,15 +35,18 @@
       owner: root
       group: root
       backup: yes
+    when: re_mode == 'both' or re_mode == 'remote'
     with_items:
       - { src: ansible.src, dest: /etc/ansible/ansible.cfg }
       - { src: requirements.yml, dest: /etc/ansible/requirements.yml }
 
   - name: Install ansible roles im remote ansible controller
     command: ansible-galaxy install -r /etc/ansible/requirements.yml
+    when: re_mode == 'both' or re_mode == 'remote'
 
   - name: Install ansible roles in local ansible controller
     command: ansible-galaxy install --roles-path roles -r requirements.yml
+    when: re_mode == 'both' or re_mode == 'local'
     delegate_to: localhost
     become: no
 
