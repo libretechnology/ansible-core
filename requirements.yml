@@ -1,0 +1,9 @@
+# from galaxy
+- src: geerlingguy.pip
+- src: geerlingguy.ansible
+- src: geerlingguy.awx
+- src: geerlingguy.certbot
+- src: geerlingguy.docker
+- src: geerlingguy.gitlab
+- src: geerlingguy.packer
+- src: oefenweb.locales

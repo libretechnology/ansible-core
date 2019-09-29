@@ -1,0 +1,46 @@
+---
+# Playbook:     ansible-roles.yml
+# Description:  Install ansible roles
+# Author:       Mauro Rosero P,
+# Email:        mrosero@libretechnology.com (mauro.rosero@gmail.com)
+# Organization: LIBRETECH, S. A.
+
+
+# Note: Run from some computers with ansible installed.
+
+- name: ansible-roles.yml
+  hosts: controllers
+  become: yes
+  gather_facts: yes
+
+  tasks:
+
+  - name: Install ansible package
+    package:
+      name:  '{{ item }}'
+      state: latest
+    with_items:
+      - ansible
+      - git
+
+  - name: Setup cremote onfiguration files
+    copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      mode: 0644
+      owner: root
+      group: root
+      backup: yes
+    with_items:
+      - { src: ansible.src, dest: /etc/ansible/ansible.cfg }
+      - { src: requirements.yml, dest: /etc/ansible/requirements.yml }
+
+  - name: Install ansible roles im remote ansible controller
+    command: ansible-galaxy install -r /etc/ansible/requirements.yml
+
+  - name: Install ansible roles in local ansible controller
+    command: ansible-galaxy install --roles-path roles -r requirements.yml
+    delegate_to: localhost
+    become: no
+
+
