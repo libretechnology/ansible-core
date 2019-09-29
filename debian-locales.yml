@@ -1,0 +1,43 @@
+---
+# Playbook:     debian-locales.yml
+# Description:  Install and Fix locales in Debian
+# Author:       Mauro Rosero P,
+# Email:        mrosero@libretechnology.com (mauro.rosero@gmail.com)
+# Organization: LIBRETECH, S. A.
+
+# Note: Run from some computers with ansible installed
+#       Only run in Debian distribution
+
+
+- name: debian-locales.yml
+  hosts: all
+  become: true
+  gather_facts: yes
+
+  tasks:
+    
+  - name: Install required language package
+    package:
+      name:  '{{ item }}'
+      state: latest
+    with_items:
+      - aptitude
+      - locales-all
+ 
+  - name: Configure US English language package 
+    shell: sed -i '/^#.* en_US.* /s/^#//' /etc/locale.gen
+    args:
+      warn: no
+
+  - name: Configure Spanish Spain language package 
+    shell: sed -i '/^#.* es_ES.* /s/^#//' /etc/locale.gen
+    args:
+      warn: no
+
+  - name: Configure Spanish Panama language package 
+    shell: sed -i '/^#.* es_PA.* /s/^#//' /etc/locale.gen
+    args:
+      warn: no
+
+  - name: Compile and generate locales
+    command: localectl set-locale LANG=es_PA.UTF-8 LANGUAGE="es_ES:pa" 
