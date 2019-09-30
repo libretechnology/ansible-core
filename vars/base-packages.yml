@@ -1,0 +1,12 @@
+---
+# base-packages.yml
+
+base_packages:
+  - { 'package': cron, 'state': latest }
+  - { 'package': ntp, 'state': latest }
+  - { 'package': man, 'state': latest }
+  - { 'package': python-setuptools, 'state': latest }
+  - { 'package': python3-setuptools, 'state': latest }
+  - { 'package': sudo, 'state': latest }
+  - { 'package': git, 'state': latest }
+  - { 'package': curl, 'state': latest }

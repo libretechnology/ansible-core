@@ -1,0 +1,21 @@
+---
+# sysop-settings.yml
+
+#ansible_password: 'ansible.control.2019'
+
+sysop_userid:       sysop
+sysop_name:         'System Operator Bot (SysOP'
+sysop_email:        'soporte@libretechnology.com'
+sysop_company:      'LIBRETECH, S. A.'
+sysop_team:         'Equipo de Infraestructura (DevOPS)'
+sysop_uid:          9110
+sysop_timezone:     America/Panama
+sysop_home:         '/home/'
+sysop_data:         '/srv/'
+sysop_bin:          '/usr/bin/'
+sysop_config:       'etc/devops/'
+sysop_groups:       'cdrom,devops'
+sysop_own:          yes
+
+sysop_group:        devops
+sysop_gid:          9110

@@ -7,37 +7,80 @@
 
 # Note: Run from some computers with ansible installed
 #       Only run in Debian distribution
----
-
+ 
 - name: bootstrap.yml
   hosts: all
-  remote_user: root
-  gather_facts: no
+  become: yes
+  become_user: root
+  gather_facts: yes
+
+  vars:
+
+    packages2install: 'files/base-packages.dat'
+
+  vars_files:
+
+    - 'vars/sysop-settings.yml'
 
   tasks:
 
-  - name: Fail if not Debian Distribution
-  	fail:
-  	  msg: 'Not a valid Debian/Ubuntu Distribution: {{ ansible_distribution }}'
-  	when: ansible_distribution != 'Debian' and ansible_distribution != 'Ubuntu'
+  - name: Read base packages file ({{ packages2install }})
+    read_csv:
+      path: '{{ packages2install }}'
+      fieldnames: packname,state
+      delimiter: ','
+    register: packages
+    become: no
+    delegate_to: localhost
 
-  - name: Check for Python
-    raw: test -e /usr/bin/python
-    changed_when: false
-    failed_when: false
-    register: check_python
+  - name: Install/Retire required base packages
+    package:
+      name: '{{ item.packname }}'
+      state: '{{ item.state }}'
+    with_items:
+      - '{{ packages.list }}'
 
-	- name: Install python3
-  	raw: apt -y update && apt -y upgrade && apt install -y python python-pip
-    when: check_python.rc != 0
+  - name: Set timezone to {{ sysop_timezone }}
+    timezone:
+      name: '{{ sysop_timezone }}'
 
-  - name: Check for Python v3
-    raw: test -e /usr/bin/python3
-    changed_when: false
-    failed_when: false
-    register: check_python
+  - name: Create devops groups ({{ sysop_group }})
+    group:
+      name: '{{ sysop_group }}'
+      gid: '{{ sysop_gid }}'
+      system: yes
+      state: present
 
-	- name: Install python
-  	raw: apt -y update && apt -y upgrade && apt install -y python3 python3-pip
-    when: check_python.rc != 0
+  - name: Ensuring that {{ sysop_group }} is able to use sudo without password
+    lineinfile:
+      path: /etc/sudoers
+      regexp: '^%{{ sysop_group }}'
+      line: '%{{ sysop_group }} ALL=(ALL) NOPASSWD: ALL'
+      #validate: 'visudo -cf %s'
 
+  - name: Create ansible-control user 
+    user: 
+      name: ansible-temporal
+      comment: 'Ansible Temporal User|{{ sysop_email }}|{{ sysop_company }}|{{ sysop_team }}'
+      group: '{{ sysop_group }}'
+      append: yes
+      groups: '{{ sysop_groups }}'
+      password: "{{ ansible_password | password_hash('sha512') }}"
+      shell: /bin/bash
+      state: present
+    when: ansible_ssh_user == sysop_userid
+
+  - name: Create sysop user ({{ sysop_userid }})
+    user: 
+      name: '{{ sysop_userid }}'
+      comment: '{{ sysop_name }}|{{ sysop_email }}|{{ sysop_company }}|{{ sysop_team }}'
+      uid: '{{ sysop_uid }}'
+      system: yes
+      group: '{{ sysop_group }}'
+      append: yes
+      groups: '{{ sysop_groups }}'
+      generate_ssh_key: yes
+      ssh_key_comment: '{{ sysop_email }}'
+      home: '{{ sysop_home }}{{ sysop_userid }}'
+      shell: /bin/bash
+      state: present

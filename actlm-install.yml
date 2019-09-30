@@ -1,0 +1,23 @@
+---
+# Playbook:     actlm-install.yml
+# Description:  Install Master Ansible Controller
+# Author:       Mauro Rosero P,
+# Email:        mrosero@libretechnology.com (mauro.rosero@gmail.com)
+# Organization: LIBRETECH, S. A.
+
+# Note: Run from some computers with ansible installed
+#       Only run in Debian distribution
+
+- import_playbook: bootstrap.yml
+- import_playbook: debian-locales.yml
+- import_playbook: ansible-roles.yml
+
+- name: actlm-install.yml
+  hosts: ansible-controller
+  become: True
+  become_user: root
+  become_method: su
+  gather_facts: yes
+  
+#  vars_files:
+#    - 'vars/sysop-definitions.yml
