@@ -7,3 +7,11 @@
 - src: geerlingguy.gitlab
 - src: geerlingguy.packer
 - src: oefenweb.locales
+
+- src: robertdebock.bootstrap
+- src: robertdebock.epel
+- src: robertdebock.buildtools
+- src: robertdebock.python_pip
+- src: robertdebock.docker
+- src: robertdebock.docker_ce
+- src: robertdebock.scl

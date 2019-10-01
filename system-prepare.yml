@@ -1,0 +1,28 @@
+---
+# Playbook:     system-prepare.yml
+# Description:  The machine you are running this on, may need to be prepared.
+# Author:       Mauro Rosero P,
+# Email:        mrosero@libretechnology.com (mauro.rosero@gmail.com)
+# Organization: LIBRETECH, S. A.
+
+# Note: Run from some computers with ansible installed
+ 
+- name: system-prepare.yml
+  hosts: all
+  gather_facts: no
+  become: yes
+
+  vars:
+
+    bootstrap_user: sysop
+
+  vars_files:
+
+    - vars/sysop-settings.yml
+
+  roles:
+    - robertdebock.bootstrap
+ #  - robertdebock.epel
+    - robertdebock.buildtools
+    - geerlingguy.pip
+    - robertdebock.docker
