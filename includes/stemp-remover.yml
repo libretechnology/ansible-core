@@ -1,0 +1,24 @@
+---
+# include: stemp-remover.yml
+
+- name: Check if sysop temporal user ({{ sysop_temporal }}) exists
+  getent:
+    database: passwd
+    key: '{{ sysop_temporal }}'
+    fail_key: false
+
+- name: Get current uid of sysop user temporal
+  set_fact:
+    delete_uid: "{{ getent_passwd[lookup('vars', 'sysop_temporal')] }}"
+  when: getent_passwd[sysop_temporal] != ''
+
+- name: Check if user is connected how sysop user
+  set_fact:
+    temporal_connected: true
+  when: ansible_ssh_user == sysop_temporal and delete_uid is defined
+
+- name: Remove temporal sysop user
+  user:
+    name: '{{ sysop_temporal }}'
+    state: absent
+  when: temporal_connected != true

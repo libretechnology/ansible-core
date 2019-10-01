@@ -16,6 +16,8 @@ sysop_bin:          '/usr/bin/'
 sysop_config:       'etc/devops/'
 sysop_groups:       'cdrom,devops'
 sysop_own:          yes
+sysop_shell:        /bin/bash
 
 sysop_group:        devops
 sysop_gid:          9110
+sysop_temporal:     'ansible-temporal'

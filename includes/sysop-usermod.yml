@@ -1,0 +1,19 @@
+---
+# include: sysop-usermod.yml
+
+- name: Create sysop user ({{ sysop_userid }})
+  user: 
+    name: '{{ sysop_userid }}'
+    comment: '{{ sysop_name }}|{{ sysop_email }}|{{ sysop_company }}|{{ sysop_team }}'
+    uid: '{{ sysop_uid }}'
+    system: yes
+    group: '{{ sysop_group }}'
+    append: yes
+    password: "{{ ansible_password | password_hash('sha512') }}"
+    groups: '{{ sysop_groups }}'
+ #  generate_ssh_key: yes
+ #  ssh_key_comment: '{{ sysop_email }}'
+    home: '{{ sysop_home }}{{ sysop_userid }}'
+    shell: '{{ sysop_shell }}'
+    state: present
+  when: sysop_connected != true

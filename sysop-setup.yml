@@ -1,0 +1,106 @@
+---
+# Playbook:     sysop-setup.yml
+# Description:  Install/Configure base packages and configure sysop user
+# Author:       Mauro Rosero P,
+# Email:        mrosero@libretechnology.com (mauro.rosero@gmail.com)
+# Organization: LIBRETECH, S. A.
+
+# Note: Run from some computers with ansible installed
+ 
+- name: sysop-setup.yml
+  hosts: all
+  gather_facts: no
+
+  vars:
+
+    local_user: "{{ lookup('env','USER') }}"
+    sysop_connected: no
+    is_completed: no
+    
+  tasks:
+
+  - include_vars: vars/sysop-settings.yml
+  - include_vars: vars/base-packages.yml
+
+  - name: Test servers connection
+    action: ping
+    ignore_unreachable: true
+    ignore_errors: true
+    register: pingtest
+
+  - name: Set sysop configuration only for servers ready to connection
+    block:
+
+      - name: Set Timezone server ({{ sysop_timezone }})
+        timezone:
+          name: '{{ sysop_timezone }}'
+
+      - name: Install or Remove base packages
+        package:
+          name: '{{ item.package }}'
+          state: '{{ item.state }}'
+        with_items: '{{ base_packages}}'
+
+      - name: Create devops groups ({{ sysop_group }})
+        group:
+          name: '{{ sysop_group }}'
+          gid: '{{ sysop_gid }}'
+          system: yes
+          state: present
+
+      - name: Ensuring that {{ sysop_group }} is able to use sudo without password
+        lineinfile:
+          path: /etc/sudoers
+          regexp: '^%{{ sysop_group }}'
+          line: '%{{ sysop_group }} ALL=(ALL) NOPASSWD: ALL'
+
+      - name: Check if sysop user ({{ sysop_userid }}) exists
+        getent:
+          database: passwd
+          key: '{{ sysop_userid }}'
+          fail_key: false
+
+      - name: Get current uid of sysop user
+        set_fact:
+          change_uid: "{{ getent_passwd[lookup('vars', 'sysop_userid')] }}"
+        when: getent_passwd[sysop_userid] != ''
+
+      - debug: var=change_uid
+
+      - name: Check if user is connected how sysop user
+        set_fact:
+          sysop_connected: true
+        when: ansible_ssh_user == sysop_userid and change_uid is defined
+
+      - name: Create ansible-control user ({{ sysop_temporal }})
+        user: 
+          name: '{{ sysop_temporal }}'
+          comment: 'Ansible Temporal User|{{ sysop_email }}|{{ sysop_company }}|{{ sysop_team }}'
+          group: '{{ sysop_group }}'
+          append: yes
+          groups: '{{ sysop_groups }}'
+          password: "{{ ansible_password | password_hash('sha512') }}"
+          shell: /bin/bash
+          state: present
+        when: sysop_connected == true
+
+      - include_tasks: includes/sysop-usermod.yml
+
+      - name: Set complete task
+        set_fact:
+          is_completed: true
+
+    when: pingtest.ping is defined and ansible_connection == "ssh"
+    become: yes
+    become_user: root
+
+  - name: PLEASE READ THIS NOTIFICATION AND FOLLOW THIS STEP
+    debug:
+      msg:
+      - "Please, to reach complete this task, you require run sysop-complete.yml playbook."
+      - "you must use the temporary user ({{ sysop_temporal }}) and the ssh connection"
+      - "password for this process."
+      - "Example: ansible-playbook -i hosts.ini sysop-complete.yml -k -u {{ sysop_temporal }}"
+    when: sysop_connected == true ans is_completed == true
+    #run_once: true
+

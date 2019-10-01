@@ -27,7 +27,7 @@
       - ansible
       - git
 
-  - name: Setup cremote onfiguration files
+  - name: Setup remote onfiguration files
     copy:
       src: "{{ item.src }}"
       dest: "{{ item.dest }}"
@@ -37,7 +37,7 @@
       backup: yes
     when: re_mode == 'both' or re_mode == 'remote'
     with_items:
-      - { src: ansible.src, dest: /etc/ansible/ansible.cfg }
+      - { src: files/ansible.src, dest: /etc/ansible/ansible.cfg }
       - { src: requirements.yml, dest: /etc/ansible/requirements.yml }
 
   - name: Install ansible roles im remote ansible controller
