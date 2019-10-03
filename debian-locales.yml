@@ -17,12 +17,12 @@
   tasks:
     
   - name: Install required language package
-    package:
+    apt:
       name:  '{{ item }}'
       state: latest
     with_items:
-      - aptitude
-      - locales-all
+      - 'aptitude'
+      - 'locales-all'
  
   - name: Configure US English language package 
     shell: sed -i '/^#.* en_US.* /s/^#//' /etc/locale.gen
