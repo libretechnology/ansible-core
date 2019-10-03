@@ -24,7 +24,7 @@
       msg: "Found {{ updates.stdout_lines | length }} packages to be updated:\n\n{{ updates.stdout }}"
 
 
-  - nmae: Update installed packages
+  - name: Update installed packages
     block:
     
     - name: install updates using yum
