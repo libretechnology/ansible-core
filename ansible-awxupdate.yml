@@ -13,6 +13,8 @@
   vars:
 
     base_packages: []
+    pip2_packages: []
+    pip3_packages: []
   
   pre_tasks:
 
@@ -22,12 +24,28 @@
     timezone:
       name: '{{ sysop_timezone }}'
 
-
   - name: Install or Remove base packages
     package:
       name: '{{ item.package }}'
       state: '{{ item.state }}'
     with_items: '{{ base_packages}}' 
+
+  - name: Install or Remove pip2 packages
+    package:
+      name: '{{ item.package }}'
+      state: '{{ item.state }}'
+    with_items: '{{ pip2_packages}}'
+
+  - name: Install or Remove pip3 packages
+    package:
+      name: '{{ item.package }}'
+      state: '{{ item.state }}'
+    with_items: '{{ pip3_packages}}'
+
+
+  roles:
+
+    - robertdebock.epel
 
 
   tasks:
