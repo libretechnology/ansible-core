@@ -23,7 +23,7 @@
     register: check_python
 
   - name: Install python3
-    raw: apt -y update && apt -y upgrade && apt install -y python python-pip
+    raw: apt -y update && apt -y upgrade && apt install -y python python-pip python-apt
     when: check_python.rc != 0
 
   - name: Check for Python v3
@@ -33,5 +33,5 @@
     register: check_python
 
   - name: Install python
-    raw: apt -y update && apt -y upgrade && apt install -y python3 python3-pip
+    raw: apt -y update && apt -y upgrade && apt install -y python3 python3-pip python3-apt
     when: check_python.rc != 0
