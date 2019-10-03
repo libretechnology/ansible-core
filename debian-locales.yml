@@ -18,11 +18,8 @@
     
   - name: Install required language package
     apt:
-      name:  '{{ item }}'
+      name:  ["aptitude", "locales-all"]
       state: latest
-    with_items:
-      - 'aptitude'
-      - 'locales-all'
  
   - name: Configure US English language package 
     shell: sed -i '/^#.* en_US.* /s/^#//' /etc/locale.gen
