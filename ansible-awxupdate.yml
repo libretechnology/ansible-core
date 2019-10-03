@@ -6,7 +6,7 @@
 # Organization: LIBRETECH, S. A.
 
 - name: ansible-awxupdate.yml
-  hosts: awx-centos
+  hosts: awxcentos
   become: true
   gather_facts: yes
 
