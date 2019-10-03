@@ -1,0 +1,61 @@
+---
+# Playbook:     ansible-awxupdate.yml
+# Description:  Install/Update awx-controller packages and settings
+# Author:       Mauro Rosero P,
+# Email:        mrosero@libretechnology.com (mauro.rosero@gmail.com)
+# Organization: LIBRETECH, S. A.
+
+- name: ansible-awxupdate.yml
+  hosts: awx-centos
+  become: true
+  gather_facts: yes
+
+  tasks:
+
+  - name: check packages for updates
+    shell: yum list updates | awk 'f;/Updated Packages/{f=1;}' | awk '{ print $1 }'
+    changed_when: updates.stdout_lines | length > 0
+    args:
+      warn: false
+    register: updates
+
+  - name: display count
+    debug:
+      msg: "Found {{ updates.stdout_lines | length }} packages to be updated:\n\n{{ updates.stdout }}"
+
+
+  - nmae: Update installed packages
+    block:
+    
+    - name: install updates using yum
+      yum:
+        name: "*"
+        state: latest
+    
+    - name: install yum-utils
+      package:
+        name: yum-utils
+    
+    - name: check if reboot is required
+      shell: needs-restarting -r
+      failed_when: false
+      register: reboot_required
+      changed_when: false
+
+    when: updates.stdout_lines | length > 0
+
+  - name: Reboot Servers (only  if required)
+    block:
+
+    - name: reboot the server if required
+      reboot:
+        connect_timeout: 600
+      ignore_errors: true
+      changed_when: false
+      register: reboot_result
+      
+    - name: reboot time
+      debug:
+        msg: "The system rebooted in {{ reboot_result.elapsed }} seconds."
+
+    when: updates.stdout_lines | length > 0 and reboot_required.rc != 0
