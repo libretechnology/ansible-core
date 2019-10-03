@@ -42,12 +42,6 @@
       state: '{{ item.state }}'
     with_items: '{{ pip3_packages}}'
 
-
-  roles:
-
-  - robertdebock.epel
-
-
   tasks:
 
   - name: check packages for updates
