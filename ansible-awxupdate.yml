@@ -10,6 +10,26 @@
   become: true
   gather_facts: yes
 
+  vars:
+
+    base_packages: []
+  
+  pre_tasks:
+
+  - include_vars: vars/sysop-settings.yml
+
+  - name: Set Timezone server ({{ sysop_timezone }})
+    timezone:
+      name: '{{ sysop_timezone }}'
+
+
+  - name: Install or Remove base packages
+    package:
+      name: '{{ item.package }}'
+      state: '{{ item.state }}'
+    with_items: '{{ base_packages}}' 
+
+
   tasks:
 
   - name: check packages for updates
