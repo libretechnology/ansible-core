@@ -11,7 +11,7 @@
 
   vars:
     linux_os: ['RedHat', 'Debian', 'Suse', 'Ubuntu', 'Slackware', 'Gentoo', 'Archlinux', 'Mandrake', 'Alpine']
-    terraform_zipdir: /tmp/terraform/
+    terraform_prefix: /tmp/terraform
     debugging: false
 
   tasks:
@@ -24,9 +24,8 @@
         os_system: 'Linux'
       when: ansible_os_family in linux_os
 
-    - name: Unpack terraform for Linux 64bits Family ({{ ansible_os_family }})
-      unarchive:
-        src: https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.9_linux_amd64.zip
-        dest: '{{ terraform_zipdir }}'
-        remote_src: yes
+    - name: Download terraform for Linux 64bits Family ({{ ansible_os_family }} {{ ansible_architecture }})
+      get_url:
+        url: https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.9_linux_amd64.zip
+        dest: '{{ terraform_prefix }}_{{ os_system }}_{{ ansible_architecture }}.zip'
       when: os_system == 'Linux' and ansible_architecture == 'x86_64'
