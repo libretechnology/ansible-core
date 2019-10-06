@@ -38,7 +38,7 @@
     with_items: '{{ pip2_packages}}'
 
   - name: Install or Remove pip3 packages
-    package:
+    pip:
       name: '{{ item.package }}'
       state: '{{ item.state }}'
       executable: pip3
