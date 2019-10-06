@@ -44,7 +44,7 @@
             src: '{{ terraform_prefix }}_{{ os_system }}_{{ ansible_architecture }}.zip'
             dest: '{{ terraform_bin }}/'
             owner: root
-            group: '{{ devops_group }}'
+            group: '{{ sysop_group }}'
             mode: 0550
 
       when: os_system == 'Linux' and ansible_architecture == 'x86_64'
