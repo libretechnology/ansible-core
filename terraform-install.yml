@@ -10,7 +10,7 @@
   gather_facts: true
 
   vars:
-    linux_os: ['Centos', 'Redhat', 'Debian', 'Suse', 'Ubuntu', 'Slackware', 'Gentoo', 'Archlinux', 'Mandrake', 'Alpine']
+    linux_os: ['RedHat', 'Debian', 'Suse', 'Ubuntu', 'Slackware', 'Gentoo', 'Archlinux', 'Mandrake', 'Alpine']
     terraform_zipdir: /tmp/terraform/
     debugging: false
 
@@ -22,7 +22,7 @@
     - name: Check if Linux OS 
       set_fact:
         os_system: 'Linux'
-      when: ansible_distribution in linux_os
+      when: ansible_os_family in linux_os
 
     - name: Unpack terraform for Linux 64bits Family ({{ ansible_os_family }})
       unarchive:
