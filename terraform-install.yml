@@ -7,22 +7,22 @@
 
 - name: terraform-install.yml
   hosts: [terraforms]
-  gather_facts: yes
+  gather_facts: true
 
   vars:
     linux_os: ['Centos', 'Redhat', 'Debian', 'Suse', 'Ubuntu', 'Slackware', 'Gentoo', 'Archlinux', 'Mandrake', 'Alpine']
     terraform_zipdir: /tmp/terraform/
-    debugger: false
+    debugging: false
 
   tasks:
 
-    - debug: msg= '{{ ansible_os_family }} and {{ ansible_architecture }}'
-      when: debugger == true
+    - debug: msg='{{ ansible_distribution }} and {{ ansible_os_family }} and {{ ansible_architecture }}'
+      when: debugging == true
 
     - name: Check if Linux OS 
       set_fact:
         os_system: 'Linux'
-      when: ansible_os_family in linux_os
+      when: ansible_distribution in linux_os
 
     - name: Unpack terraform for Linux 64bits Family ({{ ansible_os_family }})
       unarchive:
