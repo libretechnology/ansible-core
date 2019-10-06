@@ -7,18 +7,21 @@
 
 - name: terraform-install.yml
   hosts: [terraforms]
-  become: true
   gather_facts: yes
 
   vars:
-    linux_os: ['Redhat', 'Debian', 'Suse', 'Ubuntu', 'Slackware', 'Gentoo', 'Archlinux', 'Mandrake', 'Alpine']
+    linux_os: ['Centos', 'Redhat', 'Debian', 'Suse', 'Ubuntu', 'Slackware', 'Gentoo', 'Archlinux', 'Mandrake', 'Alpine']
     terraform_zipdir: /tmp/terraform/
+    debugger: false
 
   tasks:
 
+    - debug: msg: '{{ ansible_os_family }} and {{ ansible_architecture }}'
+      when: debugger == true
+
     - name: Check if Linux OS 
       set_fact:
-        os: 'Linux'
+        os_system: 'Linux'
       when: ansible_os_family in linux_os
 
     - name: Unpack terraform for Linux 64bits Family ({{ ansible_os_family }})
@@ -26,4 +29,4 @@
         src: https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.9_linux_amd64.zip
         dest: '{{ terraform_zipdir }}'
         remote_src: yes
-      when: os == 'Linux' and ansible_architecture == 'x86_64'
+      when: os_system == 'Linux' and ansible_architecture == 'x86_64'
