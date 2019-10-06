@@ -16,7 +16,7 @@
 
   tasks:
 
-    - debug: msg: '{{ ansible_os_family }} and {{ ansible_architecture }}'
+    - debug: msg= '{{ ansible_os_family }} and {{ ansible_architecture }}'
       when: debugger == true
 
     - name: Check if Linux OS 
