@@ -1,0 +1,14 @@
+---
+# Playbook:     gitlab-install.yml
+# Description:  Install/Update gitlab servers
+# Author:       Mauro Rosero P,
+# Email:        mrosero@libretechnology.com (mauro.rosero@gmail.com)
+# Organization: LIBRETECH, S. A.
+
+- name: gitlab-install.yml
+  hosts: [gitlab-servers]
+  become: true
+  gather_facts: yes
+
+  roles:
+    - { role: geerlingguy.gitlab }
