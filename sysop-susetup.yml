@@ -1,14 +1,15 @@
 ---
-# Playbook:     sysop-setup.yml
-# Description:  Install/Configure base packages and configure sysop user
+# Playbook:     sysop-susetup.yml
+# Description:  Install/Configure sysop environment with no ssh-root access and not sudo
 # Author:       Mauro Rosero P,
 # Email:        mrosero@libretechnology.com (mauro.rosero@gmail.com)
 # Organization: LIBRETECH, S. A.
 
 # Note: Run from some computers with ansible installed
  
-- name: sysop-setup.yml
+- name: sysop-susetup.yml
   hosts: all
+  become_method: su
   gather_facts: no
 
   vars:
@@ -20,7 +21,6 @@
   tasks:
 
   - include_vars: vars/sysop-settings.yml
-  - include_vars: vars/base-packages.yml
 
   - name: Test servers connection
     action: ping
@@ -35,11 +35,10 @@
         timezone:
           name: '{{ sysop_timezone }}'
 
-      - name: Install or Remove base packages
+      - name: Install/Update sudo package
         package:
-          name: '{{ item.package }}'
-          state: '{{ item.state }}'
-        with_items: '{{ base_packages}}'
+          name: sudo
+          state: present
 
       - name: Create devops groups ({{ sysop_group }})
         group:
@@ -64,8 +63,6 @@
         set_fact:
           change_uid: "{{ getent_passwd[lookup('vars', 'sysop_userid')] }}"
         when: getent_passwd[sysop_userid] != ''
-
-      - debug: var=change_uid
 
       - name: Check if user is connected how sysop user
         set_fact:
@@ -97,10 +94,10 @@
   - name: PLEASE READ THIS NOTIFICATION AND FOLLOW THIS STEP
     debug:
       msg:
-      - "Please, to reach complete this task, you require run sysop-complete.yml playbook."
+      - "Please, to reach complete this task, you require run sysop-sucomplete.yml playbook."
       - "you must use the temporary user ({{ sysop_temporal }}) and the ssh connection"
       - "password for this process."
-      - "Example: ansible-playbook -i hosts.ini sysop-complete.yml -k -u {{ sysop_temporal }}"
+      - "Example: ansible-playbook -i hosts.ini sysop-sucomplete.yml -k -u {{ sysop_temporal }}"
     when: sysop_connected == true ans is_completed == true
     #run_once: true
 
