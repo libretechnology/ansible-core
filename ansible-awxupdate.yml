@@ -31,9 +31,9 @@
   - name: Setting RedHat Family Epel Repository
     block:
 
-    - name: Check if EPEL repo is already configured.
+    - name: Check if EPEL repo is already configured
       stat: 
-        path: {{ epel_repofile_path }}
+        path: '{{ epel_repofile_path }}'
       register: epel_repofile_result
 
     - name: Install EPEL repo.
