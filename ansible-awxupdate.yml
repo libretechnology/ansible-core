@@ -31,15 +31,17 @@
     with_items: '{{ base_packages}}' 
 
   - name: Install or Remove pip2 packages
-    package:
+    pip:
       name: '{{ item.package }}'
       state: '{{ item.state }}'
+      executable: pip
     with_items: '{{ pip2_packages}}'
 
   - name: Install or Remove pip3 packages
     package:
       name: '{{ item.package }}'
       state: '{{ item.state }}'
+      executable: pip3
     with_items: '{{ pip3_packages}}'
 
   tasks:
