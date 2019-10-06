@@ -1,0 +1,79 @@
+---
+# Playbook:     sysop-sucomplete.yml
+# Description:  Complete sysop-susetup.yml using sysop-temporal (sudo)
+# Author:       Mauro Rosero P,
+# Email:        mrosero@libretechnology.com (mauro.rosero@gmail.com)
+# Organization: LIBRETECH, S. A.
+
+# Note: Run from some computers with ansible installed
+ 
+- name: sysop-sucomplete.yml
+  hosts: all
+  gather_facts: no
+
+  vars:
+
+    local_user: "{{ lookup('env','USER') }}"
+    sysop_connected: no
+    temporal_connected: no
+    is_completed: no
+
+  tasks:
+
+  - include_vars: vars/sysop-settings.yml
+  - include_vars: vars/base-packages.yml
+
+  - name: Test servers connection
+    action: ping
+    ignore_unreachable: true
+    ignore_errors: true
+    register: pingtest
+
+  - name: Set sysop configuration only for servers ready to connection
+    block:
+
+      - name: Check if sysop user ({{ sysop_userid }}) exists
+        getent:
+          database: passwd
+          key: '{{ sysop_userid }}'
+          fail_key: false
+
+      - name: Get current uid of sysop user
+        set_fact:
+          change_uid: "{{ getent_passwd[lookup('vars', 'sysop_userid')][2] }}"
+        when: getent_passwd[sysop_userid] != ''
+
+      - name: Check if user is connected how sysop user
+        set_fact:
+          sysop_connected: true
+        when: ansible_ssh_user == sysop_userid and change_uid is defined
+
+      - include_tasks: includes/sysop-usermod.yml
+
+      - include_tasks: includes/stemp-remover.yml
+
+      - name: Set complete task
+        set_fact:
+          is_completed: true
+
+    when: pingtest.ping is defined and ansible_connection == "ssh"
+    become: yes
+    become_user: root
+
+  - name: PLEASE READ THIS NOTIFICATION AND FOLLOW THIS STEP
+    debug:
+      msg:
+      - "You have completed the configuration process, now you  should be able to access"
+      - "the system with the sysop user and the assigned password."
+      - "Run you are ready to install and configure your server services."
+    when: sysop_connected != true and is_completed == true
+    #run_once: true
+
+  - name: WARNING! PLEASE REMOVE {{ sysop_temporal }}
+    debug:
+      msg:
+      - "For security concerns remove {{ sysop_temporal }} when complete this process"
+      - "This processs can not remove because the user is in use."
+      - "To remove, prease re-run this process with {{ sysop_userid }} user."
+    when: temporal_connected == true and is_completed == true
+  
