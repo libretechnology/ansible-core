@@ -35,7 +35,7 @@
       owner: root
       group: root
       backup: yes
-    when: re_mode == 'both' or re_mode == 'remote'
+    when: re_mode == 'both' or re_mode == 'remote' or re_mode == 'awx'
     with_items:
       - { src: files/ansible.src, dest: /etc/ansible/ansible.cfg }
       - { src: requirements.yml, dest: /etc/ansible/requirements.yml }
@@ -43,6 +43,11 @@
   - name: Install ansible roles im remote ansible controller
     command: ansible-galaxy install -r /etc/ansible/requirements.yml
     when: re_mode == 'both' or re_mode == 'remote'
+
+  - name: Install ansible roles im remote ansible controller
+    command: ansible-galaxy install -r /etc/ansible/requirements.yml
+    when: re_mode == 'awx'
+    delegate_to: localhost
 
   - name: Install ansible roles in local ansible controller
     command: ansible-galaxy install --roles-path roles -r requirements.yml
