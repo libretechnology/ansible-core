@@ -1,14 +1,29 @@
 ---
-# Playbook:     gitlab-install.yml
-# Description:  Install/Update gitlab servers
+# Playbook:     terraform-install.yml
+# Description:  Install/Update terraform infraestructure tool
 # Author:       Mauro Rosero P,
 # Email:        mrosero@libretechnology.com (mauro.rosero@gmail.com)
 # Organization: LIBRETECH, S. A.
 
-- name: gitlab-install.yml
-  hosts: [gitlab-servers]
+- name: terraform-install.yml
+  hosts: [terraform-servers]
   become: true
   gather_facts: yes
 
-  roles:
-    - { role: geerlingguy.gitlab }
+  vars:
+    linux_os: ['Redhat', 'Debian', 'Suse', 'Ubuntu', 'Slackware', 'Gentoo', 'Archlinux', 'Mandrake', 'Alpine']
+    terraform_zipdir: /tmp/
+
+  tasks:
+
+    - name: Check if Linux OS 
+      set_fact:
+        os: 'Linux'
+      when: ansible_os_family in linux_os
+
+    - name: Unpack terraform for Linux 64bits Family ({{ ansible_os_family }})
+      unarchive:
+        src: https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.9_linux_amd64.zip
+        dest: '{{ terraform_zipdir }}'
+        remote_src: yes
+      when: os == 'Linux' and ansible_architecture == 'x86_64'
