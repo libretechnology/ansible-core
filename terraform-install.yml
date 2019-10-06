@@ -24,8 +24,19 @@
         os_system: 'Linux'
       when: ansible_os_family in linux_os
 
-    - name: Download terraform for Linux 64bits Family ({{ ansible_os_family }} {{ ansible_architecture }})
-      get_url:
-        url: https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.9_linux_amd64.zip
-        dest: '{{ terraform_prefix }}_{{ os_system }}_{{ ansible_architecture }}.zip'
+    - name: Install terraform infraestructure tools for Linux 64bits
+      block:
+
+        - name: Download terraform_0.12.9_linux_amd64.zip
+          get_url:
+            url: https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.9_linux_amd64.zip
+            dest: '{{ terraform_prefix }}_{{ os_system }}_{{ ansible_architecture }}.zip'
+
+        - name: Unpack Terraform for {{ ansible_os_family }} {{ ansible_architecture }}) 
+          unarchive:
+            copy: no
+            src: '{{ terraform_prefix }}_{{ os_system }}_{{ ansible_architecture }}.zip'
+            dest: '/tmp/'
+      
+
       when: os_system == 'Linux' and ansible_architecture == 'x86_64'
