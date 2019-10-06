@@ -12,7 +12,12 @@
   vars:
     linux_os: ['RedHat', 'Debian', 'Suse', 'Ubuntu', 'Slackware', 'Gentoo', 'Archlinux', 'Mandrake', 'Alpine']
     terraform_prefix: /tmp/terraform
+    terraform_bin: /tmp
     debugging: false
+
+  vars_files:
+
+    - vars/sysop-settings.yml
 
   tasks:
 
@@ -32,11 +37,14 @@
             url: https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.9_linux_amd64.zip
             dest: '{{ terraform_prefix }}_{{ os_system }}_{{ ansible_architecture }}.zip'
 
-        - name: Unpack Terraform for {{ ansible_os_family }} {{ ansible_architecture }}) 
+        - name: Unpack and Install Terraform for {{ ansible_os_family }} {{ ansible_architecture }}) 
           unarchive:
             copy: no
+            create: '{{ terraform_bin }}/terraform'
             src: '{{ terraform_prefix }}_{{ os_system }}_{{ ansible_architecture }}.zip'
-            dest: '/tmp/'
-      
+            dest: '{{ terraform_bin }}/'
+            owner: root
+            group: '{{ devops_group }}'
+            mode: 0550
 
       when: os_system == 'Linux' and ansible_architecture == 'x86_64'
