@@ -94,10 +94,8 @@
   - name: PLEASE READ THIS NOTIFICATION AND FOLLOW THIS STEP
     debug:
       msg:
-      - "Please, to reach complete this task, you require run sysop-sucomplete.yml playbook."
-      - "you must use the temporary user ({{ sysop_temporal }}) and the ssh connection"
-      - "password for this process."
-      - "Example: ansible-playbook -i hosts.ini sysop-sucomplete.yml -k -u {{ sysop_temporal }}"
-    when: sysop_connected == true ans is_completed == true
-    #run_once: true
-
+        - "Please, to reach complete this task, you require run sysop-sucomplete.yml playbook."
+        - "you must use the temporary user ({{ sysop_temporal }}) and the ssh connection"
+        - "password for this process."
+        - "Example: ansible-playbook -i hosts.ini sysop-sucomplete.yml -k -u {{ sysop_temporal }}"
+    when: sysop_connected == true and is_completed == true
