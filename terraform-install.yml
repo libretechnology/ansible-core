@@ -24,6 +24,12 @@
     - debug: msg='{{ ansible_distribution }} and {{ ansible_os_family }} and {{ ansible_architecture }}'
       when: debugging == true
 
+    - name: Checck if {{ sysop_group }} exist
+      getent:
+        database: group
+        key: '{{ sysop_group }}'
+        fail_key: no
+
     - name: Check if Linux OS 
       set_fact:
         os_system: 'Linux'
@@ -44,7 +50,7 @@
             src: '{{ terraform_prefix }}_{{ os_system }}_{{ ansible_architecture }}.zip'
             dest: '{{ terraform_bin }}/'
             owner: root
-            group: '{{ sysop_group }}'
+            group: "{{ (getent_group.devops is defined) | ternary('devops', 'root') }}"
             mode: 0550
 
       when: os_system == 'Linux' and ansible_architecture == 'x86_64'
