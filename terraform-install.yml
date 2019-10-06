@@ -40,7 +40,7 @@
         - name: Unpack and Install Terraform for {{ ansible_os_family }} {{ ansible_architecture }}) 
           unarchive:
             copy: no
-            create: '{{ terraform_bin }}/terraform'
+            creates: '{{ terraform_bin }}/terraform'
             src: '{{ terraform_prefix }}_{{ os_system }}_{{ ansible_architecture }}.zip'
             dest: '{{ terraform_bin }}/'
             owner: root
