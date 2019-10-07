@@ -42,7 +42,7 @@ gitlab_rails['gitlab_default_projects_features_container_registry'] = {{ gitlab_
 #### Automatic issue closing
 ####! See https://docs.gitlab.com/ce/customization/issue_closing.html for more
 ####! information about this pattern.
-{% if gitlab_issues_closing_enabled != "true" %}
+{% if gitlab_issues_closing_enabled == "true" %}
 gitlab_rails['gitlab_issue_closing_pattern'] = "\b((?:[Cc]los(?:e[sd]?|ing)|\b[Ff]ix(?:e[sd]|ing)?|\b[Rr]esolv(?:e[sd]?|ing)|\b[Ii]mplement(?:s|ed|ing)?)(:?) +(?:(?:issues? +)?%{issue_ref}(?:(?:, *| +and +)?)|([A-Z][A-Z0-9_]+-\d+))+)"
 {% endif %}
 #
