@@ -3,7 +3,6 @@ external_url '{{ gitlab_external_url }}'
 
 # gitlab.yml configuration
 gitlab_rails['time_zone'] = "{{ gitlab_time_zone }}"
-gitlab_rails['backup_keep_time'] = {{ gitlab_backup_keep_time }}
 gitlab_rails['gitlab_email_enabled'] = {{ gitlab_email_enabled }}
 {% if gitlab_email_enabled == "true" %}
 gitlab_rails['gitlab_email_from'] = "{{ gitlab_email_from }}"
@@ -25,7 +24,10 @@ nginx['ssl_certificate_key'] = "{{ gitlab_ssl_certificate_key }}"
 git_data_dirs({"default" => {"path" => "{{ gitlab_git_data_dir }}"} })
 
 # The directory where Gitlab backups will be stored
+gitlab_rails['backup_keep_time'] = {{ gitlab_backup_keep_time }}
 gitlab_rails['backup_path'] = "{{ gitlab_backup_path }}"
+gitlab_rails['manage_backup_path'] = {{ gitlab_manage_backup_path }}
+gitlab_rails['backup_archive_permissions'] = {{ gitlab_backup_permissions }}
 
 #### GitLab user privileges
 gitlab_rails['gitlab_default_can_create_group'] = {{ gitlab_can_create_group }}
