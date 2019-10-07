@@ -25,10 +25,11 @@ git_data_dirs({"default" => {"path" => "{{ gitlab_git_data_dir }}"} })
 # The directory where Gitlab backups will be stored
 gitlab_rails['backup_path'] = "{{ gitlab_backup_path }}"
 
-{% if gitlab_letsencrypt_enabled == "true" %}
+
 #################################################################################
 ## Let's Encrypt integration
 #################################################################################
+{% if gitlab_letsencrypt_enabled == "true" %}
 letsencrypt['enable'] = true
 letsencrypt['contact_emails'] = ['{{ sysop_email }}']
 letsencrypt['group'] = 'root'
