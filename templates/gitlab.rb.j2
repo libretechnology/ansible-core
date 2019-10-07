@@ -25,11 +25,12 @@ git_data_dirs({"default" => {"path" => "{{ gitlab_git_data_dir }}"} })
 # The directory where Gitlab backups will be stored
 gitlab_rails['backup_path'] = "{{ gitlab_backup_path }}"
 
+{% if gitlab_letsencrypt_enabled == "true" %}
 #################################################################################
 ## Let's Encrypt integration
 #################################################################################
 letsencrypt['enable'] = true
-letsencrypt['contact_emails'] = ['{{ sysop_email }}'] # This should be an array of email addresses to add as contacts
+letsencrypt['contact_emails'] = ['{{ sysop_email }}']
 letsencrypt['group'] = 'root'
 letsencrypt['key_size'] = 2048
 letsencrypt['owner'] = 'root'
@@ -39,6 +40,7 @@ letsencrypt['auto_renew_hour'] = 0
 letsencrypt['auto_renew_minute'] = 0 # Should be a number or cron expression, if specified.
 letsencrypt['auto_renew_day_of_month'] = "*/4"
 nginx['custom_gitlab_server_config'] = "location ^~ /.well-known { root /var/www/letsencrypt; }"
+{% endif %}
 
 # These settings are documented in more detail at
 # https://gitlab.com/gitlab-org/gitlab-ce/blob/master/config/gitlab.yml.example#L118
