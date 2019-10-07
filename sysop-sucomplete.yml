@@ -66,7 +66,6 @@
       - "the system with the sysop user and the assigned password."
       - "Run you are ready to install and configure your server services."
     when: sysop_connected != true and is_completed == true
-    #run_once: true
 
   - name: WARNING! PLEASE REMOVE {{ sysop_temporal }}
     debug:
