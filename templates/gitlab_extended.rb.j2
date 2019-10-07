@@ -31,6 +31,14 @@ gitlab_rails['backup_path'] = "{{ gitlab_backup_path }}"
 gitlab_rails['gitlab_default_can_create_group'] = {{ gitlab_can_create_group }}
 gitlab_rails['gitlab_username_changing_enabled'] = {{ gitlab_change_username }}
 
+#### Default project feature settings
+gitlab_rails['gitlab_default_projects_features_issues'] = {{ gitlab_project_issues }}
+gitlab_rails['gitlab_default_projects_features_merge_requests'] = {{ gitlab_project_merge_request }}
+gitlab_rails['gitlab_default_projects_features_wiki'] = {{ gitlab_project_wiki }}
+gitlab_rails['gitlab_default_projects_features_snippets'] = {{ gitlab_project_snippets }}
+gitlab_rails['gitlab_default_projects_features_builds'] = {{ gitlab_project_builds }}
+gitlab_rails['gitlab_default_projects_features_container_registry'] = {{ gitlab_project_container_registry }}
+
 #################################################################################
 ## Let's Encrypt integration
 #################################################################################
