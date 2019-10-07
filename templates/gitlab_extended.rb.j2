@@ -160,5 +160,26 @@ gitlab_rails['initial_root_password'] = "{{ gitlab_initial_root_pass }}"
 ## gitlab_rails['initial_shared_runners_registration_token'] = "token"
 #
 
+####! **Do not change the following 3 settings unless you know what you are
+####!   doing**
+gitlab_rails['registry_api_url'] = "http://localhost:5000"
+gitlab_rails['registry_key_path'] = "/var/opt/gitlab/gitlab-rails/certificate.key"
+gitlab_rails['registry_issuer'] = "omnibus-gitlab-issuer"
+#
+
+#################################################################################
+### GitLab Workhorse
+###! Docs: https://gitlab.com/gitlab-org/gitlab-workhorse/blob/master/README.md
+#################################################################################
+#
+gitlab_workhorse['enable'] = true
+gitlab_workhorse['ha'] = false
+gitlab_workhorse['listen_network'] = "unix"
+gitlab_workhorse['listen_umask'] = 000
+gitlab_workhorse['listen_addr'] = "/var/opt/gitlab/gitlab-workhorse/socket"
+gitlab_workhorse['auth_backend'] = "http://localhost:8080"
+#
+
+
 # To change other settings, see:
 # https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md#changing-gitlab-yml-settings
