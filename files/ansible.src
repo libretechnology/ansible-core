@@ -24,8 +24,8 @@
 
 #module_set_locale = True
 interpreter_python = auto_silent
-remote_tmp     = /tmp/ansible/remote
-local_tmp      = /tmp/ansible/local
+remote_tmp     = ~/tmp/ansible/remote
+local_tmp      = ~/tmp/ansible/local
 
 
 # plays will gather facts by default, which contain information about
