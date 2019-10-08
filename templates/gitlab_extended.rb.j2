@@ -192,6 +192,20 @@ gitlab_workhorse['auth_backend'] = "http://localhost:8080"
 {% if gitlab_mattermost_enabled == "true" %}
 mattermost_external_url '{{ gitlab_mattermost_external_url }}'
 {% if gitlab_mattermost_reconfigured == "true" %}
+mattermost['enable'] = true
+mattermost['service_use_ssl'] = true
+#mattermost_nginx['ssl_certificate'] = "/etc/letsencrypt/live/mattermost.company.com/fullchain.pem"
+#mattermost_nginx['ssl_certificate_key'] = "/etc/letsencrypt/live/matteermost.company.com/privkey.pem"
+mattermost['service_use_ssl'] = true
+mattermost['service_address'] = "0.0.0.0"
+mattermost['service_port'] = "8065"
+mattermost['service_enable_incoming_webhooks'] = true
+mattermost['service_enable_outgoing_webhooks'] = true
+mattermost['service_enable_oauth_service_provider'] = true
+mattermost['team_site_name'] = "Mattermost"
+mattermost['team_enable_team_creation'] = true
+mattermost['team_enable_user_creation'] = true
+mattermost['team_allow_public_link'] = true
 mattermost['gitlab_enable'] = true
 mattermost['gitlab_id'] = "{{ mattermost_gitlab_id }}"
 mattermost['gitlab_secret'] = "{{ mattermost_gitlab_secret }}"
