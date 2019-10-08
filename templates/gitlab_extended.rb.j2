@@ -213,6 +213,8 @@ mattermost['gitlab_scope'] = ""
 mattermost['gitlab_auth_endpoint'] = "{{ gitlab_external_url }}/oauth/authorize"
 mattermost['gitlab_token_endpoint'] = "{{ gitlab_external_url }}/oauth/token"
 mattermost['gitlab_user_api_endpoint'] = "{{ gitlab_external_url }}/api/v4/user"
+mattermost['email_enable_sign_up_with_email'] = true
+mattermost['service_enable_insecure_outgoing_connections'] = true
 {% endif %}
 {% endif %}
 #
