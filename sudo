@@ -1,0 +1,9 @@
+[global]
+default = gitdevs
+ssl_verify = true
+timeout = 5
+
+[gitdevs]
+url = https://git.libretechnology.com
+private_token = tsP5JHdAyk-spHGTx-Ah
+api_version = 4

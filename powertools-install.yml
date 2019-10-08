@@ -1,0 +1,32 @@
+---
+# Playbook:     powertools-install.yml
+# Description:  Install/Update infraestructure tools
+# Author:       Mauro Rosero P,
+# Email:        mrosero@libretechnology.com (mauro.rosero@gmail.com)
+# Organization: LIBRETECH, S. A.
+
+- name: powertools-install.yml
+  hosts: [powerctls]
+  gather_facts: true
+
+  vars:
+
+    base_packages: []
+    pip2_packages: []
+    pip3_packages: []
+
+  tasks:
+
+  - name: Install or Remove pip2 packages
+    pip:
+      name: '{{ item.package }}'
+      state: '{{ item.state }}'
+      executable: pip
+    with_items: '{{ pip2_packages}}'
+
+  - name: Install or Remove pip3 packages
+    pip:
+      name: '{{ item.package }}'
+      state: '{{ item.state }}'
+      executable: pip3
+    with_items: '{{ pip3_packages}}'
