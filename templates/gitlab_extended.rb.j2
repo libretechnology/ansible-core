@@ -195,8 +195,6 @@ mattermost_external_url '{{ gitlab_mattermost_external_url }}'
 mattermost['gitlab_enable'] = true
 mattermost['gitlab_id'] = "{{ mattermost_gitlab_id }}"
 mattermost['gitlab_secret'] = "{{ mattermost_gitlab_secret }}"
-mattermost['uid'] = 80099
-mattermost['gid'] = 80099
 mattermost['gitlab_scope'] = ""
 mattermost['gitlab_auth_endpoint'] = "{{ gitlab_external_url }}/oauth/authorize"
 mattermost['gitlab_token_endpoint'] = "{{ gitlab_external_url }}/oauth/token"
